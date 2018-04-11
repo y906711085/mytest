@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>残疾人管理</title>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/dialog.js"></script>
+	</head>
+
+	<body>
+		<div class="layui-row" id="condition" style="padding: 20px 0px 0px 0px;">
+			<div class="layui-col-md11">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">姓名</label>
+							<div class="layui-input-inline">
+								<input type="text" name="SName" value="" placeholder="请输入姓名" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-inline" style="margin-right: 65px;text-align: right;">
+							<button class="layui-btn" lay-submit lay-filter="submitBtn"><i class="layui-icon">&#xe615;</i></button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="layui-col-md1">
+				<div class="layui-btn-group">
+					<button class="layui-btn layui-btn-normal" onclick="add();"><i class="layui-icon"><i class="layui-icon">&#xe654;</i></i>增加</button>
+				</div>
+			</div>
+		</div>
+		<table id="table" lay-filter="table"></table>
+		<script type="text/javascript">
+			var tableInstance;
+			layui.use(['table', 'form', 'laydate'], function() {
+				var table = layui.table;
+				var laydate = layui.laydate;
+				var form = layui.form;
+				tableInstance = table.render({
+					elem: '#table',
+					page: true, //开启分页
+					limits: [30, 60, 90, 120, 300],
+					limit: 30,
+					url: '$root.contextPath/Disabledbaseinfo/Disabledbaseinfos',
+					height: 'full-335',
+					cols: [
+						[{
+							space: true
+						}, {
+							field: 'Id',
+							title: 'ID',
+							width: 40,
+							sort: true
+						}, {
+							field: 'regionId',
+							title: '所在街道',
+							width: 80
+						}, {
+							field: 'name',
+							title: '姓名',
+							width: 80
+						}, {
+							field: 'sex',
+							title: '性别',
+							width: 80
+						}, {
+							field: 'birthDay',
+							title: '出生年月',
+							width: 120,
+						}, {
+							field: 'cardCode',
+							title: '身份证号',
+							width: 120,
+						},{
+							field: 'education',
+							title: '学历',
+							width: 120,
+						},{
+							field: 'nation',
+							title: '民族',
+							width: 120,
+						},{
+							field: 'disabilityCertificate',
+							title: '残疾证件等级',
+							width: 120,
+						},{
+							field: 'disabilityCategory',
+							title: '残疾类型',
+							width: 120,
+						},{
+							field: 'disabilityLevel',
+							title: '残疾等级',
+							width: 120,
+						},{
+							field: 'contactPhone',
+							title: '联系电话',
+							width: 120,
+						},{
+							field: 'address',
+							title: '地址',
+							width: 120,
+						},{
+							field: 'cardState',
+							title: '证件状态',
+							width: 120,
+						},{
+							field: 'cardType',
+							title: '证件类型',
+							width: 120,
+						},{
+							title: '操作',
+							fixed: 'right',
+							width: 140,
+							align: 'center',
+							toolbar: '#actonBar'
+						}]
+					]
+				});
+
+				//监听工具条
+				table.on('tool(table)', function(obj) {
+					var data = obj.data; //获得当前行数据
+					var layEvent = obj.event; //获得 lay-event 对应的值
+					if(layEvent === 'del') { //删除
+						layer.confirm('确定从系统中删除：' + data.name + '吗？', function(index) {
+							$.post("$root.contextPath/Disabledbaseinfo/Delete", {
+								Id: data.Id
+							}, function(result) {
+								if(result.ResultType == "Success") {
+									tableInstance.reload();
+									layer.msg(result.Message, {
+										icon: 1
+									});
+								} else {
+									layer.msg(Result.Message, {
+										icon: 5,
+										anim: 6
+									});
+								}
+							});
+							layer.close(index);
+							//向服务端发送删除指令
+						});
+					} else if(layEvent === 'edit') { //编辑
+						//do something
+						//页面层
+						$.dialog({
+							title: '修改信息',
+							area: ['720px', '620px'],
+							scrollbar: true,
+							content: ['$root.contextPath/Disabledbaseinfo/Edit/' + data.Id, 'no'],
+							end: function() {
+								var reslut = $("#dialogresult").val();
+								if(reslut) {
+									tableInstance.reload();
+									$("#dialogresult").val("");
+								}
+							}
+						});
+					}
+				});
+				//监听单元格编辑
+				table.on('edit(table)', function(obj) {
+					var value = obj.value //得到修改后的值
+						,
+						data = obj.data //得到所在行所有键值
+						,
+						field = obj.field; //得到字段 
+					$.post("$root.contextPath/Disabledbaseinfo/EditField", {
+						Id: data.Id,
+						field: field,
+						value: value
+					}, function(result) {
+						if(result.ResultType == "Success") {
+							tableInstance.reload();
+							layer.msg(result.Message, {
+								icon: 1
+							});
+						} else {
+							layer.msg(Result.Message, {
+								icon: 5,
+								anim: 6
+							});
+						}
+					});
+				});
+				//查询提交
+				form.on('submit(submitBtn)', function(data) {
+					tableInstance.reload({
+						where: data.field
+					});
+					return false;
+				});
+			});
+
+			function add() {
+				$.dialog({
+					title: '现役军人添加',
+					area: ['720px', '620px'],
+					content: ['$root.contextPath/Disabledbaseinfo/Edit/0', 'no'],
+					end: function() {
+						var reslut = $("#dialogresult").val();
+						if(reslut) {
+							tableInstance.reload();
+							$("#dialogresult").val("");
+						}
+					}
+				});
+			}
+		</script>
+		<script type="text/html" id="actonBar">
+			<!-- <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="detail">查看</a>-->
+			<a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+			<a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+		</script>
+		<script type="text/html" id="region">
+			{{d.region.name}}
+		</script>
+	</body>
+
+</html>

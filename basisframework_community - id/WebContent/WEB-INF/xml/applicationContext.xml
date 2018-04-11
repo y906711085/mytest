@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context.xsd  
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd 
+    http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.baseframework.service.Imp" />
+	<!-- 数据库连接池配置 -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+		destroy-method="shutdown">
+		<!-- 数据库驱动 -->
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<!-- 相应驱动的jdbcUrl,你懂的 -->
+		<property name="jdbcUrl"
+			value="jdbc:mysql://127.0.0.1:3306/community?characterEncoding=utf8" />
+		<!-- 数据库的用户名 -->
+		<property name="username" value="root" />
+		<!-- 数据库的密码 -->
+		<property name="password" value="123456" />
+		<!-- 此属性控制允许连接在池中闲置的最长时间。最小允许值为10000ms（10秒）。 默认值：600000（10分钟） -->
+		<property name="idleTimeout" value="600000" />
+		<!-- 最大的连接数 -->
+		<property name="maximumPoolSize" value="500" />
+		<!-- 最小的连接数 -->
+		<property name="minimumIdle" value="10" />
+	</bean>
+	<!-- JPA实体配置 (Java EE容器) -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<!-- 扫描jpa注解配置的entity -->
+		<property name="packagesToScan" value="com.baseframework.models" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.autoReconnect">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.ehcacheprovider</prop>
+			</props>
+		</property>
+	</bean>
+	<!--指定实现JPA的适配器 -->
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="databasePlatform" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+	</bean>
+	<!-- jpa事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"></property>
+	</bean>
+	<bean name="openEntityManagerInViewInterceptor"
+		class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">
+		<property name="entityManagerFactory">
+			<ref bean="entityManagerFactory" />
+		</property>
+	</bean>
+	<!-- spring data jpa配置 -->
+	<!-- <jpa:repositories base-package="com.baseframework.models" transaction-manager-ref="transactionManager" 
+		entity-manager-factory-ref="entityManagerFactory" /> -->
+	<!-- 允许使用注解配置事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+
+	<bean id="springBeanHelper" class="com.baseframework.comm.SpringBeanHelper" />
+
+	<!-- <bean id="shiroFilter" class="com.baseframework.security.ShiroPermissionFactory"> 
+		<property name="filterChainDefinitions">
+			<value>  
+			</value>
+		</property>
+	</bean>
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="securityRealm" />
+	</bean>
+	<bean id="securityRealm" class="com.baseframework.security.SecurityShiroRealm" />
+	 
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+ 
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+	
+	<bean id="roleAuthorizationFilter" class="com.baseframework.security.RoleAuthorizationFilter"/>
+	 -->
+</beans>

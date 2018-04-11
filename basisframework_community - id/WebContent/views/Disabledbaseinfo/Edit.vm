@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="$root.contextPath/layui/css/layui.css" type="text/css">
+		<script src="$root.contextPath/layui/jquery.min.js" type="text/javascript"></script>
+		<script src="$root.contextPath/layui/layui.js" type="text/javascript"></script>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/Ajax.js"></script>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/LayResult.js"></script>
+		<script type="text/javascript">
+			//Demo
+			layui.use(['form', 'laydate'], function() {
+				var form = layui.form;
+				var laydate = layui.laydate;
+				//执行laydate实例
+				lay('.test-date').each(function(){
+					laydate.render({
+						elem: this,
+						format: 'yyyy-MM-dd',
+						trigger: 'click'
+					})
+				})
+				//监听提交
+				form.on('submit(submitBtn)', function(data) {
+					//判断数据是否存在
+					var values = data.field;
+					$.Request({
+						url: "$root.contextPath/Disabledbaseinfo/Edit",
+						data: values,
+						success: function(result) {
+							$.Result(result);
+						}
+					})
+					return false;
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div class="layui-container">
+			<form class="layui-form" action="" style="padding: 20px 0px;">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<input type="hidden" value="${disabledbaseinfo.Id}" name="Id">
+						<label class="layui-form-label">所在街道</label>
+						<div class="layui-input-inline">
+							<select name="regionId" required lay-verify="required">
+								<option value="">请选择</option>
+								#foreach($Region in $Regionlist) #if($disabledbaseinfo.regionId==$Region.Id)
+								<option value="$Region.Id" selected="selected">$Region.Name</option>
+								#else
+								<option value="$Region.Id">$Region.Name</option>
+								#end #end
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">姓名</label>
+						<div class="layui-input-inline">
+							<input type="text" name="name" required lay-verify="required" value="${disabledbaseinfo.name}" placeholder="姓名" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">性别</label>
+						<div class="layui-input-inline">
+							#if($disabledbaseinfo.sex=='男')
+							<input type="radio" name="sex" value="男" title="男" checked="">
+      						<input type="radio" name="sex" value="女" title="女">
+      						#else
+      						<input type="radio" name="sex" value="男" title="男">
+      						<input type="radio" name="sex" value="女" title="女" checked="">
+      						#end
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">出生年月</label>
+						<div class="layui-input-inline">
+							<input type="text" name="birthDay" value="${disabledbaseinfo.birthDay}" required lay-verify="required" class="layui-input test-date">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">身份证号</label>
+						<div class="layui-input-inline">
+							<input type="text" name="cardCode" value="${disabledbaseinfo.cardCode}" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">学历</label>
+						<div class="layui-input-inline">
+							<input type="text" name="education" value="${disabledbaseinfo.education}" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">民族</label>
+						<div class="layui-input-inline">
+							<input type="text" name="nation" value="${disabledbaseinfo.nation}" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">残疾证件等级</label>
+						<div class="layui-input-inline">
+							<input type="text" name="disabilityCertificate" value="${disabledbaseinfo.disabilityCertificate}" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">残疾类型</label>
+						<div class="layui-input-inline">
+							<input type="text" name="disabilityCategory" value="${disabledbaseinfo.disabilityCategory}" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">残疾等级</label>
+						<div class="layui-input-inline">
+							<input type="text" name="disabilityLevel" value="${disabledbaseinfo.disabilityLevel}" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">联系电话</label>
+						<div class="layui-input-inline">
+							<input type="text" name="contactPhone" value="${disabledbaseinfo.contactPhone}" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">地址</label>
+						<div class="layui-input-inline">
+							<input type="text" name="address" value="${disabledbaseinfo.address}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">证件状态</label>
+						<div class="layui-input-inline">
+							<input type="text" name="cardState" value="${disabledbaseinfo.cardState}" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">证件类型</label>
+						<div class="layui-input-inline">
+							<input type="text" name="cardType" value="${disabledbaseinfo.cardType}" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">备注</label>
+						<div class="layui-input-inline">
+							<input type="text" name="description" value="${disabledbaseinfo.description}" required lay-verify="" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block" style="margin-right: 65px;text-align: right;">
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						<button class="layui-btn" lay-submit lay-filter="submitBtn">立即提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+
+</html>

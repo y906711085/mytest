@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="$root.contextPath/layui/css/layui.css" type="text/css">
+		<script src="$root.contextPath/layui/jquery.min.js" type="text/javascript"></script>
+		<script src="$root.contextPath/layui/layui.js" type="text/javascript"></script>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/Ajax.js"></script>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/LayResult.js"></script>
+		<script type="text/javascript">
+			//Demo
+			layui.use(['form', 'laydate'], function() {
+				var form = layui.form;
+				var laydate = layui.laydate;
+				//执行laydate实例
+				lay('.test-date').each(function(){
+					laydate.render({
+						elem: this,
+						format: 'yyyy-MM-dd',
+						trigger: 'click'
+					})
+				})
+				//监听提交
+				form.on('submit(submitBtn)', function(data) {
+					//判断数据是否存在
+					var values = data.field;
+					$.Request({
+						url: "$root.contextPath/Veteransnotenjoy/Edit",
+						data: values,
+						success: function(result) {
+							$.Result(result);
+						}
+					})
+					return false;
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div class="layui-container">
+			<form class="layui-form" action="" style="padding: 20px 0px;">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<input type="hidden" value="${Veteransnotenjoy.Id}" name="Id">
+						<label class="layui-form-label">所在街道</label>
+						<div class="layui-input-inline">
+							<!--
+                            	作者：MoGaven@163.com
+                            	时间：2017-10-25
+                            	描述：下拉todo
+                            -->
+							<input type="text" name="street" required lay-verify="required" value="${Veteransnotenjoy.street}" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">所在社区</label>
+						<div class="layui-input-inline">
+							<!--
+                            	作者：MoGaven@163.com
+                            	时间：2017-10-25
+                            	描述：下拉todo
+                            -->
+							<input type="text" name="community" required lay-verify="required" value="${Veteransnotenjoy.community}" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">姓名</label>
+						<div class="layui-input-inline">
+							<input type="text" name="name" value="${Veteransnotenjoy.name}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">性别</label>
+						<div class="layui-input-inline">
+							#if($Veteransnotenjoy.sex=='男')
+							<input type="radio" name="sex" value="男" title="男" checked="">
+      						<input type="radio" name="sex" value="女" title="女">
+      						#else
+      						<input type="radio" name="sex" value="男" title="男">
+      						<input type="radio" name="sex" value="女" title="女" checked="">
+      						#end
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">出生年月</label>
+						<div class="layui-input-inline">
+							<input type="text" name="birthday" value="${Veteransnotenjoy.birthday}" required lay-verify="required" class="layui-input test-date">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">身份证号码</label>
+						<div class="layui-input-inline">
+							<input type="text" name="idcard" value="${Veteransnotenjoy.idcard}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">户籍</label>
+						<div class="layui-input-inline">
+							<input type="text" name="domicile" value="${Veteransnotenjoy.domicile}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">现住址</label>
+						<div class="layui-input-inline">
+							<input type="text" name="address" value="${Veteransnotenjoy.address}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">入伍时间</label>
+						<div class="layui-input-inline">
+							<input type="text" name="enlistmentdate" value="${Veteransnotenjoy.enlistmentdate}" required lay-verify="required" class="layui-input test-date">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">退伍时间</label>
+						<div class="layui-input-inline">
+							<input type="text" name="dischargedate" value="${Veteransnotenjoy.dischargedate}" required lay-verify="required" class="layui-input test-date">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">人员类别</label>
+						<div class="layui-input-inline">
+							<input type="text" name="personnelType" value="${Veteransnotenjoy.personnelType}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">安置情况</label>
+						<div class="layui-input-inline">
+							<input type="text" name="resettlementsituation" value="${Veteransnotenjoy.resettlementsituation}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">低保情况</label>
+						<div class="layui-input-inline">
+							<input type="text" name="subsistenceallowances" value="${Veteransnotenjoy.subsistenceallowances}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">就业情况</label>
+						<div class="layui-input-inline">
+							<input type="text" name="employmentsituation" value="${Veteransnotenjoy.employmentsituation}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">退休情况</label>
+						<div class="layui-input-inline">
+							<input type="text" name="retirementsituation" value="${Veteransnotenjoy.retirementsituation}"  class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">社保情况</label>
+						<div class="layui-input-inline">
+							<input type="text" name="socialsecurity" value="${Veteransnotenjoy.socialsecurity}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">联系电话</label>
+						<div class="layui-input-inline">
+							<input type="text" name="telnumber" value="${Veteransnotenjoy.telnumber}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">家庭情况</label>
+						<div class="layui-input-inline">
+							<input type="text" name="family" value="${Veteransnotenjoy.family}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">备注</label>
+						<div class="layui-input-inline">
+							<input type="text" name="description" value="${Veteransnotenjoy.description}" required lay-verify="" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block" style="margin-right: 65px;text-align: right;">
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						<button class="layui-btn" lay-submit lay-filter="submitBtn">立即提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+
+</html>

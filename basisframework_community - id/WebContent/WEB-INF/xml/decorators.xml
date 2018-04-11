@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/decorators">
+	<decorator name="basic" page="template.vm">
+		<pattern>/*</pattern>
+	</decorator>
+	<!-- 不需要过滤的请求 -->
+	<excludes>
+		<pattern>/Users/Login*</pattern>
+		<pattern>/*/Roles/*</pattern>
+		<pattern>/*/Permissions/*</pattern>
+		<pattern>/*/PermissionsRoleId/*</pattern>
+		<pattern>/*/Edit/*</pattern>
+		<pattern>/*/Upload/*</pattern>
+		<pattern>/*/Extra/*</pattern>
+		<pattern>/*/Partic/*</pattern>
+		<pattern>/*/Resource/*</pattern>
+		<pattern>/Resource/*/*</pattern>
+		<pattern>/webapp/*</pattern>
+		<pattern>/WeiXin</pattern>
+		<pattern>/WeiXin/*</pattern>
+		<pattern>/*/WeiXin</pattern>
+		<pattern>/*/WeiXin/*</pattern>
+	</excludes>
+</decorators>

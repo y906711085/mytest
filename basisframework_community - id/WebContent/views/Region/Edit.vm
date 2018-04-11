@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="$root.contextPath/layui/css/layui.css" type="text/css">
+		<script src="$root.contextPath/layui/jquery.min.js" type="text/javascript"></script>
+		<script src="$root.contextPath/layui/layui.js" type="text/javascript"></script>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/Ajax.js"></script>
+		<script type="text/javascript" src="$root.contextPath/layui/lay/modules/LayResult.js"></script>
+		<script type="text/javascript">
+			//Demo
+			layui.use(['form'], function() {
+				var form = layui.form;
+				//监听提交
+				form.on('submit(submitBtn)', function(data) {
+					//判断数据是否存在
+					var values = data.field;
+					$.Request({
+						url: "$root.contextPath/Region/Edit",
+						data: values,
+						success: function(result) {
+							$.Result(result);
+						}
+					})
+					return false;
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div class="layui-container">
+			<form class="layui-form" action="" style="padding: 20px 0px;">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<input type="hidden" value="${Region.Id}" name="Id">
+						<label class="layui-form-label">所属区域</label>
+						<div class="layui-input-inline">
+							<select name="ParentId">
+								<option value="0">请选择</option>
+								#foreach($Region in $Regionlist) #if($Region.ParentId==$Region.Id)
+								<option value="$Region.Id" selected="selected">$Region.Name</option>
+								#else
+								<option value="$Region.Id">$Region.Name</option>
+								#end #end
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">名称</label>
+						<div class="layui-input-inline">
+							<input type="text" name="Name" required lay-verify="required" value="${Region.Name}" placeholder="名称" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">地址</label>
+						<div class="layui-input-inline">
+							<input type="text" name="Address" value="${Region.Address}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">经度</label>
+						<div class="layui-input-inline">
+							<input type="text" name="Longitude" value="${Region.Longitude}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">纬度</label>
+						<div class="layui-input-inline">
+							<input type="text" name="Latitude" value="${Region.Latitude}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">描述</label>
+						<div class="layui-input-inline">
+							<input type="text" name="description" value="${Region.description}" required lay-verify="required" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block" style="margin-right: 65px;text-align: right;">
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						<button class="layui-btn" lay-submit lay-filter="submitBtn">立即提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+
+</html>

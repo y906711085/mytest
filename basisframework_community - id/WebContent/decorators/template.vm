@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>
+			$title
+		</title>
+		<link rel="stylesheet" href="$root.contextPath/layui/css/layui.css" type="text/css">
+		<script src="$root.contextPath/layui/jquery.min.js" type="text/javascript"></script>
+		<script src="$root.contextPath/layui/layui.js" type="text/javascript"></script>
+		$head
+		<style type="text/css">
+			#backbtn {
+				position: absolute;
+				right: 25px;
+				top: 10px;
+			}
+		</style>
+	</head>
+
+	<body class="layui-layout-body">
+		<input type="hidden" id="dialogresult" />
+		<div class="layui-layout layui-layout-admin">
+			<div class="layui-header layui-bg-cyan">
+				<div class="layui-logo">layui 后台布局</div>
+				<!--<ul class="layui-nav layui-layout-right">
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							#if($session.getAttribute("user")) $session.getAttribute("user").getRealName() #end
+						</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="">基本资料</a>
+							</dd>
+							<dd>
+								<a href="">安全设置</a>
+							</dd>
+						</dl>
+					</li>
+					<li class="layui-nav-item">
+						<a href="$root.contextPath/Users/Logout">退出</a>
+					</li>
+				</ul>-->
+			</div>
+
+			<div class="layui-side layui-bg-cyan">
+				<div class="layui-side-scroll">
+					<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+					<ul class="layui-nav layui-nav-tree layui-bg-cyan" lay-filter="menu">
+						<!--加载菜单-->
+						 $menu.GetMenu("$root.contextPath","$request.getServletPath()")
+						
+					</ul>
+				</div>
+			</div>
+
+			<div class="layui-body">
+				<!-- 内容主体区域 -->
+				<div class="layui-elem-quote">
+					<span class="layui-breadcrumb">
+					</span>
+					<!--<span id="backbtn"><a class="layui-btn layui-btn-primary layui-btn-small" href="javascript:window.history.go(-1);"><i class="layui-icon">&#xe65c;</i>上一页</a></span>-->
+				</div>
+				<div style="padding: 15px;">
+					$body
+				</div>
+
+			</div>
+			<div class="layui-footer">
+				<!-- 底部固定区域 -->
+				©测试
+			</div>
+			<script type="text/javascript">
+				var breadcrumb = [];
+				var itemedtext = $(".layui-nav-itemed").find("a").eq(0).text();
+				if(itemedtext != "") {
+					breadcrumb.push('<a href="javascript:void(0)">' + $(".layui-nav-itemed").find("a").eq(0).text() + '</a>');
+					breadcrumb.push('<a><cite>' + $(".layui-this").eq(0).text() + '</cite></a>');
+					//$("#backbtn").show();
+				} else {
+					breadcrumb.push('<a href="javascript:void(0)">' + $(".layui-this").eq(0).text() + '</a>');
+					//$("#backbtn").hide();
+				}
+				$(".layui-breadcrumb").html(breadcrumb.join(''));
+				//JavaScript代码区域
+				layui.use(['element', 'layer'], function() {
+					var element = layui.element;
+					var auth = GetQueryString("auth");
+					if(auth) {
+						var msg = layer.msg("该账户没有权限操作此功能", {
+							icon: 5,
+							anim: 6
+						});
+						layer.style(msg, {
+							width: 'auto',
+							height: 'auto'
+						});
+					}
+				});
+
+				function GetQueryString(name) {
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+					var r = window.location.search.substr(1).match(reg);
+					if(r != null) return unescape(r[2]);
+					return null;
+				}
+			</script>
+	</body>
+
+</html>
